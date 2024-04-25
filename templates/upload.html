@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Validation</title>
+    <style>
+        body {
+            background: linear-gradient(50deg, #f380ec, #a1aee3);
+            font-family: "Open Sans", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .form-container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-container form {
+            text-align: center;
+        }
+        
+        .form-container input[type="file"] {
+            display: none;
+        }
+        
+        .form-container label {
+            background-color: #3B8086;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .form-container label:hover {
+            background-color: #3B9990;
+        }
+        
+        .form-container button {
+            background-color: #3B8086;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .form-container button:hover {
+            background-color: #3B9990;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Validate Multiple Card Numbers</h2>
+            <form action="/validate_multiple" method="post" enctype="multipart/form-data">
+                <label for="file">Choose a text file</label>
+                <input type="file" id="file" name="file" accept=".txt" required>
+                <span id="file-name"></span>
+                <br><br>
+                <button type="submit">Validate</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById("file").addEventListener("change", function() {
+            var fileInput = document.getElementById("file");
+            var fileName = document.getElementById("file-name");
+            fileName.textContent = fileInput.files[0].name;
+        });
+    </script>
+</body>
+</html>

@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Form, Request, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from creditcard import CreditCard
@@ -38,7 +40,38 @@ async def validate_credit_card_endpoint(card_number: str = Form(...)):
     
     return {"valid": True}
  
-@app.get('/', response_class=HTMLResponse)
+
+@app.post("/validate_multiple")
+async def validate_multiple_credit_cards(file: UploadFile = File(...)):
+    # Read the contents of the uploaded file
+    file_content = await file.read()
+
+    # Split the content into lines and filter out any empty lines
+    card_numbers = [line.strip().replace("-", "") for line in file_content.decode("utf-8").split("\n") if line.strip()]
+
+    validation_results = []
+    for card_number in card_numbers:
+        # Check if the input consists only of digits
+        if not is_numeric(card_number):
+            raise HTTPException(status_code=400, detail=f"Card number '{card_number}' must contain only digits")
+
+        # Check if the card is valid
+        card = CreditCard(card_number)
+        validation_results.append({"card_number": card_number, "valid": card.is_valid})
+
+    return validation_results
+
+@app.get('/validate-page', response_class=HTMLResponse)
 def main(request: Request):
     return templates.TemplateResponse('index.html', {'request': request})
+
+
+@app.get('/validate_multiple-page', response_class=HTMLResponse)
+def main(request: Request):
+    return templates.TemplateResponse('upload.html', {'request': request})
+
+
+@app.get('/', response_class=HTMLResponse)
+def main(request: Request):
+    return templates.TemplateResponse('main.html', {'request': request})
 
